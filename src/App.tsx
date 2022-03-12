@@ -1,33 +1,52 @@
-import { Map, View } from 'ol';
-import TileLayer from 'ol/layer/Tile';
 import 'ol/ol.css';
-import OSM from 'ol/source/OSM';
-import { useEffect } from 'react';
+import { useState } from 'react';
 import './App.css';
+import { Kartta } from './Kartta';
+import { None, optGetOrElse, Option, optMap, Some } from './option';
+import { Mittauspiste } from './yhteiset';
 
-function Kartta() {
-  useEffect(() => {
-    new Map({
-      layers: [
-        new TileLayer({
-          source: new OSM(),
-        }),
-      ],
-      target: 'kartta',
-      view: new View({
-        center: [0, 0],
-        zoom: 2,
-      }),
-    })
-  })
-
-  return <div id="kartta"/>
+interface PaneeliProps {
+  valittuPiste: Option<Mittauspiste>
+  pisteenLisays: boolean
+  onLisaaPiste: () => void
+}
+const Paneeli = (props: PaneeliProps) => {
+  const pistenimi = optGetOrElse(
+    optMap(props.valittuPiste, (vp) => vp.nimi),
+    () => "-");
+  return (
+    <div>
+      <div>
+        <button disabled={props.pisteenLisays} onClick={() => props.onLisaaPiste()}>
+          Lisaa piste
+        </button>
+      </div>
+      <div>Valittu piste: {pistenimi}</div>
+    </div>
+  )
 }
 
-function App() {
+const App = () => {
+  const [pisteenLisays, setPisteenLisays] = useState(false)
+  const [valittuPiste, setValittuPiste] = useState(None() as Option<Mittauspiste>)
+
   return (
     <div className="App">
-      <Kartta />
+      <div className="juuri-vasen">
+        <Paneeli
+          valittuPiste={valittuPiste}
+          pisteenLisays={pisteenLisays}
+          onLisaaPiste={() => setPisteenLisays(true)}
+        />
+      </div>
+      <div className="juuri-oikea">
+        <Kartta
+          onLisaaPiste={() => {
+            setPisteenLisays(false)
+          }}
+          pisteenLisays={pisteenLisays}
+          onValitsePiste={(piste) => setValittuPiste(Some(piste))} />
+      </div>
     </div>
   );
 }
