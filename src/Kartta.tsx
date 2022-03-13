@@ -7,7 +7,6 @@ import 'ol/ol.css';
 import OSM from 'ol/source/OSM';
 import VectorSource from 'ol/source/Vector';
 import { useEffect } from 'react';
-import './App.css';
 import { annettu } from './util';
 import { Koordinaatti, Mittauspiste, muunnaOlKoordinaatti } from './yhteiset';
 

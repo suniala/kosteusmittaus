@@ -1,7 +1,12 @@
 import { Coordinate } from "ol/coordinate"
+import { Option } from "./option"
 
+// TODO: Tästä voisi poistaa Option-tyyppejä, jos pisteen lisäyksessä ei 
+// käytettäisi tätä tyyppiä.
 export interface Mittauspiste {
-    nimi: string
+    id: Option<string>
+    koordinaatti: Koordinaatti
+    nimi: Option<string>
 }
 
 export interface Koordinaatti {
