@@ -1,5 +1,6 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { None, optCata, Option, Some } from './option';
+import { useParams } from 'react-router-dom';
+import { None, optCata, optGet, Option, Some } from './option';
 import { Mittauspiste } from './yhteiset';
 
 interface LomakeProps {
@@ -31,35 +32,30 @@ const Lomake = (props: LomakeProps) => {
 }
 
 export interface PaneeliProps {
-  valittuPiste: Option<Mittauspiste>
+  // valittuPiste: Option<Mittauspiste>
   pisteenLisays: boolean
   onLisaaPiste: () => void
-  onTallennaPiste: (p: Mittauspiste) => void
 }
 
 export const Paneeli = (props: PaneeliProps) => {
-  const paaa = optCata(props.valittuPiste,
-    (piste) => {
-      return optCata(piste.id,
-        (id) => (<div>hop!</div>),
-        () => (<Lomake onValmis={(tiedot) => props.onTallennaPiste({
-          id: None(),
-          koordinaatti: piste.koordinaatti,
-          nimi: Some(tiedot.nimi)
-        })}/>)
-      )
-    },
-    () => null
-  )
+  const { id } = useParams()
+  // const paaa = optCata(props.valittuPiste,
+  //   (piste) => {
+  //     return optCata(piste.id,
+  //       (id) => (<div>{optGet(piste.nimi)}</div>),
+  //       () => (<Lomake onValmis={(tiedot) => props.onTallennaPiste({
+  //         id: None(),
+  //         koordinaatti: piste.koordinaatti,
+  //         nimi: Some(tiedot.nimi)
+  //       })}/>)
+  //     )
+  //   },
+  //   () => null
+  // )
 
   return (
     <div>
-      <div>
-        <button disabled={props.pisteenLisays} onClick={() => props.onLisaaPiste()}>
-          Lisaa piste
-        </button>
-      </div>
-      {paaa}
+      Hups!
     </div>
   )
 }
