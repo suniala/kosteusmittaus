@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Link, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import './App.css';
-import { eitherFold } from './either';
+import { usePromise } from './apu/hook';
+import { annettu } from './apu/yleiset';
+import { eitherFold } from './functional/either';
+import { optGet } from './functional/option';
 import { Kartta } from './Kartta';
-import { optGet } from './option';
+import { KatselePistetta } from './KatselePistetta';
 import { noudaPisteet } from './palvelin/palvelin';
-import { Paneeli } from './Paneeli';
-import { annettu, usePromise } from './util';
 import { UusiPiste } from './UusiPiste';
-import { Mittauspiste } from './yhteiset';
 
 interface PisteenLisaysProps {
   onAloitaPisteenLisays: () => void
@@ -36,7 +36,7 @@ const Aloitus = () => {
             ? (<span>lataa...</span>)
             : eitherFold(
               optGet(ehkaTulos),
-              (virhe) => (<span>virhe</span>),
+              (virhe) => (<span>{virhe}</span>),
               (tulos) => (<ul>
                 {tulos.map(piste => (
                   <li key={optGet(piste.id)}>
@@ -52,10 +52,10 @@ const Aloitus = () => {
   )
 }
 
-const PaneeliKaare = () => {
+const KatselePistettaKaare = () => {
   const parametrit = useParams()
   return (
-    <Paneeli valittuPiste={annettu(parametrit.id)} />
+    <KatselePistetta valittuPiste={annettu(parametrit.id)} />
   )
 }
 
@@ -90,7 +90,7 @@ const App = () => {
                 } />
               </Route>
               <Route path=":id" element={
-                <PaneeliKaare />
+                <KatselePistettaKaare />
               }>
               </Route>
             </Route>

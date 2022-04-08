@@ -1,3 +1,5 @@
+import { defined } from "./internal"
+
 export interface Option<T> {
     __value__: T | undefined
 }
@@ -8,10 +10,7 @@ export const optIsDefined = <T>(option: Option<T>): boolean => {
 
 export const optGet = <T>(option: Option<T>): T => {
     const value = option.__value__
-    if (value == null) {
-        throw Error('Can\'t get from None!')
-    }
-    return value
+    return defined(value)
 }
 
 export const optGetOrElse = <T>(option: Option<T>, f: () => T): T => {
@@ -34,11 +33,10 @@ export const optCata = <T, U>(
     option: Option<T>,
     whenDefined: (t: T) => U,
     whenNotDefined: () => U): U => {
-    const newLocal = optMap(option, whenDefined)
-    const newLocal_1 = optGetOrElse(
-        newLocal,
+    const maybeDefined = optMap(option, whenDefined)
+    return optGetOrElse(
+        maybeDefined,
         whenNotDefined)
-    return newLocal_1
 }
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
@@ -51,10 +49,7 @@ export const Option = <T>(value: T | undefined | null): Option<T> => {
 }
 
 export const Some = <T>(value: T): Option<T> => {
-    if (value == null) {
-        throw Error('Can\'t be nullish!')
-    }
-    return { __value__: value }
+    return { __value__: defined(value) }
 }
 
 export const None = <T>(): Option<T> => {

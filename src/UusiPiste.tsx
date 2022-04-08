@@ -1,9 +1,10 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { None, Some } from './option';
+import { None, Some } from './functional/option';
 import { tallennaPiste } from './palvelin/palvelin';
-import { annettu } from './util';
-import { Koordinaatti, Mittauspiste } from './yhteiset';
+import { annettu } from './apu/yleiset';
+import { Mittauspiste } from './yhteiset';
+import { Koordinaatti } from './apu/geometria';
 
 interface LomakeProps {
   onValmis: (tiedot: { nimi: string }) => void

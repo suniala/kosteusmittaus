@@ -1,5 +1,5 @@
 import { fromPairs } from 'ramda'
-import { optGet, Option, optIsDefined, Some } from '../option'
+import { optGet, Option, optIsDefined, Some } from '../functional/option'
 import { Mittauspiste } from '../yhteiset'
 
 let idLaskuri = 1

@@ -1,4 +1,4 @@
-import { annettu } from "./util"
+import { defined } from "./internal"
 
 export interface Either<L, R> {
     __l__: L | undefined
@@ -14,11 +14,11 @@ export const eitherIsRight = <L, R>(either: Either<L, R>): boolean => {
 }
 
 export const eitherGetLeft = <L, R>(either: Either<L, R>): L => {
-    return annettu(either.__l__)
+    return defined(either.__l__)
 }
 
 export const eitherGetRight = <L, R>(either: Either<L, R>): R => {
-    return annettu(either.__r__)
+    return defined(either.__r__)
 }
 
 export const eitherFold = <L, R, Z>(either: Either<L, R>, whenLeft: (left: L) => Z, whenRight: (right: R) => Z): Z => {

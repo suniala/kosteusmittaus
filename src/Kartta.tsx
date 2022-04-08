@@ -7,8 +7,9 @@ import 'ol/ol.css';
 import OSM from 'ol/source/OSM';
 import VectorSource from 'ol/source/Vector';
 import { useEffect } from 'react';
-import { annettu } from './util';
-import { Koordinaatti, Mittauspiste, muunnaOlKoordinaatti } from './yhteiset';
+import { Koordinaatti, muunnaOlKoordinaatti } from './apu/geometria';
+import { annettu } from './apu/yleiset';
+import { Mittauspiste } from './yhteiset';
 
 export interface KarttaProps {
   pisteenLisays: boolean

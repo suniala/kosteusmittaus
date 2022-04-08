@@ -1,13 +1,6 @@
 import { DependencyList, useEffect, useState } from 'react';
-import { Either, Left, Right } from './either';
-import { None, Option, Some } from './option';
-
-export const annettu = <T>(arvo: T | undefined | null): T => {
-    if (arvo == null) {
-        throw Error('Arvo ei saa olla undefined tai null!')
-    }
-    return arvo as T
-}
+import { Either, Left, Right } from '../functional/either';
+import { None, Option, Some } from '../functional/option';
 
 export const usePromise = <T>(p: () => Promise<T>, deps?: DependencyList) => {
     const [tulos, setTulos] = useState(None() as Option<Either<String, T>>)

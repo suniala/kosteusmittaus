@@ -1,7 +1,7 @@
-import { eitherFold } from './either'
-import { optGet } from './option'
+import { eitherFold } from './functional/either'
+import { optGet } from './functional/option'
 import { noudaPiste } from './palvelin/palvelin'
-import { usePromise } from './util'
+import { usePromise } from './apu/hook'
 import { Mittauspiste } from './yhteiset'
 
 interface TiedotProps {
@@ -14,11 +14,11 @@ const Tiedot = ({ piste }: TiedotProps) => (
   </ul>
 )
 
-export interface PaneeliProps {
+export interface KatselePistettaProps {
   valittuPiste: string
 }
 
-export const Paneeli = (props: PaneeliProps) => {
+export const KatselePistetta = (props: KatselePistettaProps) => {
   const { lataa, ehkaTulos } = usePromise(() => noudaPiste(props.valittuPiste), [props.valittuPiste])
 
   return (
