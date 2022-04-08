@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Link, Route, Routes, useNavigate } from 'react-router-dom';
+import { Link, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import './App.css';
 import { Kartta } from './Kartta';
-import { None, Option, Some } from './option';
+import { optGet, Some } from './option';
 import { Paneeli } from './Paneeli';
+import { annettu } from './util';
 import { UusiPiste } from './UusiPiste';
-import { Koordinaatti, Mittauspiste } from './yhteiset';
+import { Mittauspiste } from './yhteiset';
 
 let idLaskuri = 1
 const haeId = (): string => {
@@ -34,10 +35,15 @@ function newFunction(pisteet: { [id: string]: Mittauspiste; }) {
   </div>;
 }
 
+const PaneeliKaare = () => {
+  const parametrit = useParams()
+  return (
+    <Paneeli valittuPiste={annettu(parametrit.id)} />
+  )
+}
+
 const App = () => {
   const [pisteenLisays, setPisteenLisays] = useState(false)
-  // const [uusiPiste, setUusiPiste] = useState(None() as Option<Koordinaatti>)
-  const [valittuPiste, setValittuPiste] = useState(None() as Option<Mittauspiste>)
   const [pisteet, setPisteet] = useState({} as { [id: string]: Mittauspiste })
   const navigate = useNavigate();
 
@@ -71,19 +77,15 @@ const App = () => {
                         ...pisteet,
                         [id]: uusiPiste
                       })
-                      setValittuPiste(Some(uusiPiste))
                       navigate(`/piste/${id}`)
                     }}
                   />
                 } />
               </Route>
               <Route path=":id" element={
-                <Paneeli
-                  // valittuPiste={valittuPiste}
-                  // TODO: välitä jotenkin komponentille mahdollisuus "ladata" piste id:llä
-                  pisteenLisays={pisteenLisays}
-                  onLisaaPiste={() => setPisteenLisays(true)}
-                />} />
+                <PaneeliKaare />
+              }>
+              </Route>
             </Route>
           </Routes>
         </div>
@@ -95,7 +97,7 @@ const App = () => {
             navigate(`/piste/uusi/${k.x}/${k.y}`)
           }}
           pisteenLisays={pisteenLisays}
-          onValitsePiste={(piste) => setValittuPiste(Some(piste))}
+          onValitsePiste={(piste) => { navigate(`/piste/${optGet(piste.id)}`) }}
         />
       </div>
     </div>

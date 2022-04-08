@@ -1,61 +1,37 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { None, optCata, optGet, Option, Some } from './option';
-import { Mittauspiste } from './yhteiset';
+import { eitherFold } from './either'
+import { optGet } from './option'
+import { noudaPiste } from './palvelin/palvelin'
+import { usePromise } from './util'
+import { Mittauspiste } from './yhteiset'
 
-interface LomakeProps {
-  onValmis: (tiedot: { nimi: string }) => void
+interface TiedotProps {
+  piste: Mittauspiste
 }
-
-const Lomake = (props: LomakeProps) => {
-  const [nimi, setNimi] = useState('')
-
-  const handleSubmit = (event: FormEvent) => {
-    props.onValmis({ nimi })
-    event.preventDefault();
-  }
-
-  const validi = nimi != null
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Nimi:
-        <input
-          type="text"
-          value={nimi}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setNimi(e.target.value)} />
-      </label>
-      <input type="submit" value="Tallenna" disabled={!validi} />
-    </form>
-  )
-}
+const Tiedot = ({ piste }: TiedotProps) => (
+  <ul>
+    <li>{optGet(piste.id)}</li>
+    <li>{optGet(piste.nimi)}</li>
+  </ul>
+)
 
 export interface PaneeliProps {
-  // valittuPiste: Option<Mittauspiste>
-  pisteenLisays: boolean
-  onLisaaPiste: () => void
+  valittuPiste: string
 }
 
 export const Paneeli = (props: PaneeliProps) => {
-  const { id } = useParams()
-  // const paaa = optCata(props.valittuPiste,
-  //   (piste) => {
-  //     return optCata(piste.id,
-  //       (id) => (<div>{optGet(piste.nimi)}</div>),
-  //       () => (<Lomake onValmis={(tiedot) => props.onTallennaPiste({
-  //         id: None(),
-  //         koordinaatti: piste.koordinaatti,
-  //         nimi: Some(tiedot.nimi)
-  //       })}/>)
-  //     )
-  //   },
-  //   () => null
-  // )
+  const { lataa, ehkaTulos } = usePromise(() => noudaPiste(props.valittuPiste), [props.valittuPiste])
 
   return (
     <div>
-      Hups!
+      {
+        lataa
+          ? (<span>lataa</span>)
+          : eitherFold(
+            optGet(ehkaTulos),
+            virhe => (<span>virhe: {virhe}</span>),
+            (tulos) => (<Tiedot piste={tulos} />)
+          )
+      }
     </div>
   )
 }

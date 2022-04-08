@@ -41,6 +41,15 @@ export const optCata = <T, U>(
     return newLocal_1
 }
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const Option = <T>(value: T | undefined | null): Option<T> => {
+    if (value != null) {
+        return Some(value)
+    } else {
+        return None()
+    }
+}
+
 export const Some = <T>(value: T): Option<T> => {
     if (value == null) {
         throw Error('Can\'t be nullish!')
