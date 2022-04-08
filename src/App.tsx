@@ -2,18 +2,11 @@ import { useEffect, useState } from 'react';
 import { Link, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import './App.css';
 import { Kartta } from './Kartta';
-import { optGet, Some } from './option';
+import { optGet } from './option';
 import { Paneeli } from './Paneeli';
 import { annettu } from './util';
 import { UusiPiste } from './UusiPiste';
 import { Mittauspiste } from './yhteiset';
-
-let idLaskuri = 1
-const haeId = (): string => {
-  const id = `${idLaskuri}`
-  idLaskuri = idLaskuri + 1
-  return id
-}
 
 interface PisteenLisaysProps {
   onAloitaPisteenLisays: () => void
@@ -44,7 +37,6 @@ const PaneeliKaare = () => {
 
 const App = () => {
   const [pisteenLisays, setPisteenLisays] = useState(false)
-  const [pisteet, setPisteet] = useState({} as { [id: string]: Mittauspiste })
   const navigate = useNavigate();
 
   return (
@@ -57,7 +49,7 @@ const App = () => {
         </div>
         <div>
           <Routes>
-            <Route path="/" element={newFunction(pisteet)} />
+            <Route path="/" element={newFunction({})} />
             <Route path="piste">
               <Route path="uusi">
                 <Route path="valitse" element={
@@ -67,16 +59,7 @@ const App = () => {
                 } />
                 <Route path=":x/:y" element={
                   <UusiPiste
-                    onTallennaPiste={(p) => {
-                      const id = haeId()
-                      const uusiPiste = {
-                        ...p,
-                        'id': Some(id)
-                      };
-                      setPisteet({
-                        ...pisteet,
-                        [id]: uusiPiste
-                      })
+                    onPisteTallennettu={(id) => {
                       navigate(`/piste/${id}`)
                     }}
                   />

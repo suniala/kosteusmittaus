@@ -1,18 +1,29 @@
+import { fromPairs } from 'ramda'
 import { optGet, Option, optIsDefined, Some } from '../option'
 import { Mittauspiste } from '../yhteiset'
 
-const pisteet: { [id: string]: Mittauspiste } = {
-    '1': {
-        id: Some('1'),
-        koordinaatti: { x: 1, y: 2 },
-        nimi: Some('eka')
-    },
-    '2': {
-        id: Some('2'),
-        koordinaatti: { x: 1, y: 2 },
-        nimi: Some('toka')
-    }
+let idLaskuri = 1
+const seuraavaId = (): string => {
+    const id = `${idLaskuri}`
+    idLaskuri = idLaskuri + 1
+    return id
 }
+
+const pisteet: { [id: string]: Mittauspiste } = fromPairs(
+    [
+        {
+            id: Some(seuraavaId()),
+            koordinaatti: { x: 1, y: 2 },
+            nimi: Some('eka')
+        },
+        {
+            id: Some(seuraavaId()),
+            koordinaatti: { x: 1, y: 2 },
+            nimi: Some('toka')
+        }
+    ]
+        .map(piste => [optGet(piste.id), piste])
+)
 
 export const noudaPiste = (id: string): Promise<Mittauspiste> => {
     console.log('nouda: ' + id)
@@ -31,12 +42,17 @@ export const noudaPiste = (id: string): Promise<Mittauspiste> => {
     return p
 }
 
-export const tallennaPiste = (piste: Mittauspiste): Promise<void> => {
-    const p: Promise<void> = new Promise(
+export const tallennaPiste = (piste: Mittauspiste): Promise<string> => {
+    const p: Promise<string> = new Promise(
         resolve => setTimeout(
             () => {
-                pisteet[optGet(piste.id)] = piste
-                resolve()
+                const id = seuraavaId()
+
+                pisteet[id] = {
+                    ...piste,
+                    id: Some(id)
+                }
+                resolve(id)
             },
             100)
     )

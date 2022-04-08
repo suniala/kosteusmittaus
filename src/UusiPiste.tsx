@@ -1,8 +1,9 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { None, Some } from './option';
+import { tallennaPiste } from './palvelin/palvelin';
 import { annettu } from './util';
-import { Mittauspiste } from './yhteiset';
+import { Koordinaatti, Mittauspiste } from './yhteiset';
 
 interface LomakeProps {
   onValmis: (tiedot: { nimi: string }) => void
@@ -32,20 +33,30 @@ const Lomake = (props: LomakeProps) => {
   )
 }
 
-export interface UusiPisteProps {
-  onTallennaPiste: (p: Mittauspiste) => void
+const tallenna = async (koordinaatti: Koordinaatti, nimi: string): Promise<string> => {
+  const piste: Mittauspiste = {
+    id: None(),
+    koordinaatti,
+    nimi: Some(nimi)
+  }
+  const id = await tallennaPiste(piste)
+  return id
 }
 
+export interface UusiPisteProps {
+  onPisteTallennettu: (id: string) => void
+}
 export const UusiPiste = (props: UusiPisteProps) => {
   const { x, y } = useParams()
 
   return (
     <div>
-      <Lomake onValmis={(tiedot) => props.onTallennaPiste({
-        id: None(),
-        koordinaatti: { x: parseFloat(annettu(x)), y: parseFloat(annettu(y)) },
-        nimi: Some(tiedot.nimi)
-      })} />
+      <Lomake onValmis={async (tiedot) => {
+        const id = await tallenna(
+          { x: parseFloat(annettu(x)), y: parseFloat(annettu(y)) },
+          tiedot.nimi)
+          props.onPisteTallennettu(id)
+      }} />
     </div>
   )
 }
