@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import './App.css';
+import { eitherFold } from './either';
 import { Kartta } from './Kartta';
 import { optGet } from './option';
+import { noudaPisteet } from './palvelin/palvelin';
 import { Paneeli } from './Paneeli';
-import { annettu } from './util';
+import { annettu, usePromise } from './util';
 import { UusiPiste } from './UusiPiste';
 import { Mittauspiste } from './yhteiset';
 
@@ -17,15 +19,37 @@ const PisteenLisays = (p: PisteenLisaysProps) => {
   return (<div>Valitse piste kartalta.</div>)
 }
 
-function newFunction(pisteet: { [id: string]: Mittauspiste; }) {
-  return <div>
-    <Link to="/piste/uusi/valitse">
-      Lisää piste
-    </Link>
+const Aloitus = () => {
+  const { lataa, ehkaTulos } = usePromise(() => noudaPisteet(), [])
 
-    {/* TODO: Näytä pisteet? */}
-    {Object.keys(pisteet).length}
-  </div>;
+  return (
+    <div>
+      <div>
+        <Link to="/piste/uusi/valitse">
+          Lisää piste
+        </Link>
+      </div>
+
+      <div>
+        {
+          lataa
+            ? (<span>lataa...</span>)
+            : eitherFold(
+              optGet(ehkaTulos),
+              (virhe) => (<span>virhe</span>),
+              (tulos) => (<ul>
+                {tulos.map(piste => (
+                  <li key={optGet(piste.id)}>
+                    <Link to={`/piste/${optGet(piste.id)}`}>
+                      {optGet(piste.nimi)}
+                    </Link>
+                  </li>))}
+              </ul>)
+            )
+        }
+      </div>
+    </div>
+  )
 }
 
 const PaneeliKaare = () => {
@@ -49,7 +73,7 @@ const App = () => {
         </div>
         <div>
           <Routes>
-            <Route path="/" element={newFunction({})} />
+            <Route path="/" element={<Aloitus />} />
             <Route path="piste">
               <Route path="uusi">
                 <Route path="valitse" element={

@@ -25,6 +25,18 @@ const pisteet: { [id: string]: Mittauspiste } = fromPairs(
         .map(piste => [optGet(piste.id), piste])
 )
 
+export const noudaPisteet = (): Promise<Mittauspiste[]> => {
+    console.log('noudaPisteet')
+    const p: Promise<Mittauspiste[]> = new Promise(
+        (resolve, reject) => setTimeout(
+            () => {
+                resolve(Object.values(pisteet))
+            },
+            2000)
+    )
+    return p
+}
+
 export const noudaPiste = (id: string): Promise<Mittauspiste> => {
     console.log('nouda: ' + id)
     const p: Promise<Mittauspiste> = new Promise(
