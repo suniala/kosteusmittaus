@@ -9,8 +9,8 @@ interface TiedotProps {
 }
 const Tiedot = ({ piste }: TiedotProps) => (
   <ul>
-    <li>{optGet(piste.id)}</li>
-    <li>{optGet(piste.nimi)}</li>
+    <li>{piste.id}</li>
+    <li>{piste.nimi}</li>
   </ul>
 )
 

@@ -1,5 +1,5 @@
 import { fromPairs } from 'ramda'
-import { optGet, Option, optIsDefined, Some } from '../functional/option'
+import { optGet, Option, optIsDefined } from '../functional/option'
 import { Mittauspiste } from '../yhteiset'
 
 let idLaskuri = 1
@@ -12,17 +12,17 @@ const seuraavaId = (): string => {
 const pisteet: { [id: string]: Mittauspiste } = fromPairs(
     [
         {
-            id: Some(seuraavaId()),
+            id: seuraavaId(),
             koordinaatti: { x: 1, y: 2 },
-            nimi: Some('eka')
+            nimi: 'eka'
         },
         {
-            id: Some(seuraavaId()),
+            id: seuraavaId(),
             koordinaatti: { x: 1, y: 2 },
-            nimi: Some('toka')
+            nimi: 'toka'
         }
     ]
-        .map(piste => [optGet(piste.id), piste])
+        .map(piste => [piste.id, piste])
 )
 
 export const noudaPisteet = (): Promise<Mittauspiste[]> => {
@@ -54,7 +54,7 @@ export const noudaPiste = (id: string): Promise<Mittauspiste> => {
     return p
 }
 
-export const tallennaPiste = (piste: Mittauspiste): Promise<string> => {
+export const tallennaPiste = (piste: Pick<Mittauspiste, 'koordinaatti' | 'nimi'>): Promise<string> => {
     const p: Promise<string> = new Promise(
         resolve => setTimeout(
             () => {
@@ -62,7 +62,7 @@ export const tallennaPiste = (piste: Mittauspiste): Promise<string> => {
 
                 pisteet[id] = {
                     ...piste,
-                    id: Some(id)
+                    id: id
                 }
                 resolve(id)
             },

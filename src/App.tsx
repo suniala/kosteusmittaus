@@ -39,9 +39,9 @@ const Aloitus = () => {
               (virhe) => (<span>{virhe}</span>),
               (tulos) => (<ul>
                 {tulos.map(piste => (
-                  <li key={optGet(piste.id)}>
-                    <Link to={`/piste/${optGet(piste.id)}`}>
-                      {optGet(piste.nimi)}
+                  <li key={piste.id}>
+                    <Link to={`/piste/${piste.id}`}>
+                      {piste.nimi}
                     </Link>
                   </li>))}
               </ul>)
@@ -104,7 +104,7 @@ const App = () => {
             navigate(`/piste/uusi/${k.x}/${k.y}`)
           }}
           pisteenLisays={pisteenLisays}
-          onValitsePiste={(piste) => { navigate(`/piste/${optGet(piste.id)}`) }}
+          onValitsePiste={(piste) => { navigate(`/piste/${piste.id}`) }}
         />
       </div>
     </div>
