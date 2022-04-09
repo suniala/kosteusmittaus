@@ -39,23 +39,27 @@ export const Kartta = (props: KarttaProps) => {
     map.setTarget('kartta')
   })
 
-  useEffect(() => {
-    if (props.pisteenLisays) {
-      const draw = new Draw({
-        source: pisteSource,
-        type: 'Point',
-      });
-      map.addInteraction(draw)
-      draw.on('drawend', (drawend) => {
-        const olPiste = annettu(drawend.feature.getGeometry()) as Point
-        const koordinaatti = muunnaOlKoordinaatti(olPiste.getCoordinates())
+  console.log('pisteenlisäys?: ' + props.pisteenLisays)
+  useEffect(
+    () => {
+      if (props.pisteenLisays) {
+        const draw = new Draw({
+          source: pisteSource,
+          type: 'Point',
+        });
+        map.addInteraction(draw)
+        draw.on('drawend', (drawend) => {
+          console.log('drawend')
+          const olPiste = annettu(drawend.feature.getGeometry()) as Point
+          const koordinaatti = muunnaOlKoordinaatti(olPiste.getCoordinates())
 
-        map.removeInteraction(draw)
+          map.removeInteraction(draw)
 
-        props.onLisaaPiste(koordinaatti)
-      })
-    }
-  })
+          props.onLisaaPiste(koordinaatti)
+        })
+      }
+    },
+    [props.pisteenLisays])
 
   return (<div id="kartta" />)
 }

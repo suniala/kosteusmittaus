@@ -15,7 +15,9 @@ interface PisteenLisaysProps {
 }
 
 const PisteenLisays = (p: PisteenLisaysProps) => {
-  useEffect(() => p.onAloitaPisteenLisays())
+  useEffect(
+    () => p.onAloitaPisteenLisays(),
+    [])
   return (<div>Valitse piste kartalta.</div>)
 }
 
@@ -78,7 +80,7 @@ const App = () => {
               <Route path="uusi">
                 <Route path="valitse" element={
                   <PisteenLisays
-                    onAloitaPisteenLisays={() => setPisteenLisays(true)}
+                    onAloitaPisteenLisays={() => { setPisteenLisays(true) }}
                   />
                 } />
                 <Route path=":x/:y" element={
