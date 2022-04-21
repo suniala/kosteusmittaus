@@ -3,7 +3,7 @@ import { Either, Left, Right } from '../functional/either';
 import { None, Option, Some } from '../functional/option';
 
 export const usePromise = <T>(p: () => Promise<T>, deps?: DependencyList) => {
-    const [tulos, setTulos] = useState(None() as Option<Either<String, T>>)
+    const [tulos, setTulos] = useState(None() as Option<Either<string, T>>)
     const [lataa, setLataa] = useState(true)
 
     useEffect(
