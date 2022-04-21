@@ -2,7 +2,7 @@
 
 ## Tekemistä
 
-* Pisteen lisäys (draw) jää päälle pisteen valinnan jälkeen. Ehkä vika on PisteenLisays-komponentissa?
+* ?
 
 ## Getting Started with Create React App
 
