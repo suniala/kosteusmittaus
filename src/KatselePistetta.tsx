@@ -1,20 +1,9 @@
 import { usePromise } from './apu/hook'
-import { Lataava1, Lataava2 } from './Lataava'
+import { Lataava } from './Lataava'
 import { noudaPiste } from './palvelin/palvelin'
 import { Mittauspiste } from './yhteiset'
 
-interface Tiedot1Props {
-  piste: Mittauspiste
-}
-
-const Tiedot1 = ({ piste }: Tiedot1Props) => (
-  <ul>
-    <li>{piste.id}</li>
-    <li>{piste.nimi}</li>
-  </ul>
-)
-
-const Tiedot2 = (piste: Mittauspiste) => (
+const Tiedot = (piste: Mittauspiste) => (
   <ul>
     <li>{piste.id}</li>
     <li>{piste.nimi}</li>
@@ -31,23 +20,7 @@ export const KatselePistetta = (props: KatselePistettaProps) => {
 
   return (
     <div>
-      <span>Tässä on kokeilumielessä muutama erilainen tapa käyttää Lataava-komponettia</span>
-      <div>
-        <Lataava1 lataa={lataa} ehkaTulos={ehkaTulos} luoLapsi={(tulos: Mittauspiste) => (<Tiedot1 piste={tulos} />)} />
-      </div>
-      <div>
-        <Lataava2 lataa={lataa} ehkaTulos={ehkaTulos}>
-          {tulos => (<Tiedot1 piste={tulos} />)}
-        </Lataava2>
-      </div>
-      <div>
-        <Lataava2 lataa={lataa} ehkaTulos={ehkaTulos}>
-          {Tiedot2}
-        </Lataava2>
-      </div>
-      <div>
-        <Lataava2 lataa={lataa} ehkaTulos={ehkaTulos} children={Tiedot2} />
-      </div>
+      <Lataava lataa={lataa} ehkaTulos={ehkaTulos} lapsi={Tiedot} />
     </div>
   )
 }
