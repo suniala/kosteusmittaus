@@ -1,4 +1,10 @@
-# Getting Started with Create React App
+# Kosteusmittausten tallentamista Reactilla
+
+## Tekemistä
+
+* Pisteen lisäys (draw) jää päälle pisteen valinnan jälkeen. Ehkä vika on PisteenLisays-komponentissa?
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
