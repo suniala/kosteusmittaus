@@ -3,12 +3,12 @@ import { Link, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import './App.css';
 import { usePromise } from './apu/hook';
 import { annettu } from './apu/yleiset';
-import { eitherFold } from './functional/either';
-import { optGet } from './functional/option';
 import { Kartta } from './Kartta';
 import { KatselePistetta } from './KatselePistetta';
+import { Lataava } from './Lataava';
 import { noudaPisteet } from './palvelin/palvelin';
 import { UusiPiste } from './UusiPiste';
+import { Mittauspiste } from './yhteiset';
 
 interface PisteenLisaysProps {
   onAloitaPisteenLisays: () => void
@@ -24,6 +24,17 @@ const PisteenLisays = (p: PisteenLisaysProps) => {
 const Aloitus = () => {
   const { lataa, ehkaTulos } = usePromise(() => noudaPisteet(), [])
 
+  const Pisteet = (pisteet: Mittauspiste[]) => (
+    <ul>
+      {pisteet.map(piste => (
+        <li key={piste.id}>
+          <Link to={`/piste/${piste.id}`}>
+            {piste.nimi}
+          </Link>
+        </li>))}
+    </ul>
+  )
+
   return (
     <div>
       <div>
@@ -33,22 +44,7 @@ const Aloitus = () => {
       </div>
 
       <div>
-        {
-          lataa
-            ? (<span>lataa...</span>)
-            : eitherFold(
-              optGet(ehkaTulos),
-              (virhe) => (<span>{virhe}</span>),
-              (tulos) => (<ul>
-                {tulos.map(piste => (
-                  <li key={piste.id}>
-                    <Link to={`/piste/${piste.id}`}>
-                      {piste.nimi}
-                    </Link>
-                  </li>))}
-              </ul>)
-            )
-        }
+        <Lataava lataa={lataa} ehkaTulos={ehkaTulos} lapsi={Pisteet} />
       </div>
     </div>
   )
